@@ -1,0 +1,605 @@
+<title>Identity Market Intel Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root{
+  /* chrome */
+  --bg:#F4F2FC; --bg-2:#FFFFFF;
+  --card:#FFFFFF; --card-2:#FAF9FE;
+  --ink:#17141F; --muted:#6B6580; --faint:#9A94AC;
+  --line:#E6E2F4; --line-2:#D2CCE8;
+
+  --violet:#6D4AE0; --violet-deep:#4C2FB0; --violet-soft:#EDE8FD;
+  --night:#191233; --night-2:#241A47;
+  --lime:#D7F24A; --lime-deep:#B9D62C;
+
+  /* semantic — verdict state, deliberately outside the violet/lime chrome */
+  --ok:#0E9E6E;
+  --settled:#0A84C4;
+  --warn:#DE8B08;
+  --unknown:#D6337F;
+  --none:#B3ADC4;
+
+  --r-lg:26px; --r-md:18px; --r-sm:12px;
+  --f-d:"Archivo",system-ui,sans-serif;
+  --f-b:"DM Sans",system-ui,-apple-system,sans-serif;
+  --f-m:"DM Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#100C1E; --bg-2:#161029;
+    --card:#1B1433; --card-2:#221942;
+    --ink:#F2EFFA; --muted:#A9A1C4; --faint:#7C749A;
+    --line:#2C2350; --line-2:#3B3068;
+    --violet:#9B7BFF; --violet-deep:#7A56F0; --violet-soft:#241A47;
+    --night:#0B0818; --night-2:#171034;
+    --ok:#2FD39B; --settled:#45B4EC; --warn:#F2B23C; --unknown:#FF6BAA; --none:#4A4270;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#100C1E; --bg-2:#161029;
+  --card:#1B1433; --card-2:#221942;
+  --ink:#F2EFFA; --muted:#A9A1C4; --faint:#7C749A;
+  --line:#2C2350; --line-2:#3B3068;
+  --violet:#9B7BFF; --violet-deep:#7A56F0; --violet-soft:#241A47;
+  --night:#0B0818; --night-2:#171034;
+  --ok:#2FD39B; --settled:#45B4EC; --warn:#F2B23C; --unknown:#FF6BAA; --none:#4A4270;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:400 15px/1.6 var(--f-b);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:6px}
+
+.page{max-width:1180px;margin:0 auto;padding:20px clamp(14px,3vw,28px) 60px}
+
+/* ── top bar ─────────────────────────────────────────── */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  background:var(--card);border-radius:100px;padding:11px 12px 11px 20px;
+  border:1px solid var(--line);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;font:700 15px/1 var(--f-d);letter-spacing:.02em}
+.brand .glyph{width:30px;height:30px;border-radius:9px;background:var(--night);
+  display:grid;place-items:center;flex-shrink:0}
+.brand .glyph svg{display:block}
+.top .pill{background:var(--violet-soft);color:var(--violet);border:0;
+  border-radius:100px;padding:9px 17px;font:500 12.5px/1 var(--f-b)}
+
+/* ── hero ────────────────────────────────────────────── */
+.hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);
+  gap:clamp(20px,3vw,40px);align-items:center;padding:clamp(30px,5vw,56px) 0 10px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font:500 11.5px/1 var(--f-m);
+  letter-spacing:.13em;text-transform:uppercase;color:var(--violet);margin:0 0 18px}
+.kicker svg{display:block}
+h1{font:800 clamp(36px,5.6vw,60px)/1.03 var(--f-d);letter-spacing:-.025em;
+  text-transform:uppercase;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--violet);display:block}
+.hero p.lede{color:var(--muted);font-size:16px;max-width:44ch;margin:20px 0 26px}
+.cta{display:inline-flex;align-items:center;gap:12px;background:var(--lime);color:#17141F;
+  border:0;border-radius:100px;padding:7px 7px 7px 22px;font:700 14px/1 var(--f-b)}
+.cta .dot{width:34px;height:34px;border-radius:50%;background:#17141F;display:grid;
+  place-items:center;flex-shrink:0}
+.cta:hover{background:var(--lime-deep)}
+
+/* coverage card */
+.covercard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px}
+.covercard h2{font:700 19px/1.25 var(--f-d);margin:0 0 5px;letter-spacing:-.01em}
+.covercard .sub{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+.wall{display:flex;align-items:flex-end;gap:3px;height:88px;overflow:hidden;min-width:0;
+  padding-bottom:2px}
+.tick{flex:1 1 0;min-width:3px;height:44%;border-radius:3px;background:var(--none);opacity:.34}
+.tick--star{height:100%}
+.tick[data-s="verified"]{background:var(--ok);opacity:1}
+.tick[data-s="settled"]{background:var(--settled);opacity:1}
+.tick[data-s="incomplete"]{background:var(--warn);opacity:1}
+.tick[data-s="unknown"]{background:var(--unknown);opacity:1}
+.gap{flex:0 0 9px;min-width:9px;background:none;opacity:1}
+@media (prefers-reduced-motion:no-preference){
+  .tick{animation:grow .4s cubic-bezier(.2,.75,.3,1) backwards}
+  @keyframes grow{from{height:0}}
+}
+.wallaxis{display:flex;gap:3px;margin-top:9px;font:500 10px/1 var(--f-m);
+  letter-spacing:.1em;color:var(--faint)}
+.wallaxis span{flex:1 1 0;text-align:center}
+.wallaxis .gap{flex:0 0 9px}
+.legend{display:flex;flex-wrap:wrap;gap:7px 14px;margin-top:20px;
+  padding-top:18px;border-top:1px solid var(--line)}
+.legend b{display:inline-flex;align-items:center;gap:7px;font:400 12px/1 var(--f-b);
+  color:var(--muted)}
+.legend i{width:11px;height:11px;border-radius:3px;display:block}
+
+/* ── dark method panel ───────────────────────────────── */
+.slab{background:linear-gradient(135deg,var(--night) 0%,var(--night-2) 100%);
+  border-radius:var(--r-lg);padding:clamp(26px,3.6vw,40px);margin:34px 0;color:#EFEBFF}
+.slab .kicker{color:var(--lime);margin-bottom:22px}
+.rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.rule{padding:0 24px;border-left:1px solid rgba(255,255,255,.13)}
+.rule:first-child{padding-left:0;border-left:0}
+.rule:last-child{padding-right:0}
+.rule svg{display:block;margin-bottom:15px}
+.rule h3{font:700 13px/1.3 var(--f-d);letter-spacing:.06em;text-transform:uppercase;
+  margin:0 0 9px;color:#fff}
+.rule p{font-size:13px;line-height:1.55;color:#B9B0DC;margin:0}
+
+/* ── section heads ───────────────────────────────────── */
+.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  margin:44px 0 20px;flex-wrap:wrap}
+.shead h2{font:700 clamp(23px,3vw,30px)/1.12 var(--f-d);letter-spacing:-.02em;margin:0;
+  text-transform:uppercase;max-width:18ch}
+.shead h2 em{font-style:normal;color:var(--violet)}
+.shead p{color:var(--muted);font-size:14px;margin:0;max-width:46ch}
+
+/* ── star cards ──────────────────────────────────────── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:18px;text-align:left;display:flex;flex-direction:column;gap:10px;
+  transition:transform .15s ease,border-color .15s ease}
+.card:hover{transform:translateY(-3px);border-color:var(--violet)}
+.card .rowid{font:500 11px/1 var(--f-m);letter-spacing:.1em;color:var(--faint)}
+.card h4{font:700 15.5px/1.28 var(--f-d);margin:0;letter-spacing:-.005em}
+.card .q{color:var(--muted);font-size:12.5px;line-height:1.5;margin:0;flex:1}
+.state{display:inline-flex;align-items:center;gap:7px;font:500 11.5px/1 var(--f-b);
+  padding:7px 11px;border-radius:100px;align-self:flex-start;
+  background:var(--card-2);border:1px solid var(--line-2);color:var(--muted)}
+.state i{width:8px;height:8px;border-radius:50%;background:var(--none);flex-shrink:0}
+.state[data-s="verified"] i{background:var(--ok)}
+.state[data-s="settled"] i{background:var(--settled)}
+.state[data-s="incomplete"] i{background:var(--warn)}
+.state[data-s="unknown"] i{background:var(--unknown)}
+
+/* ── stat band ───────────────────────────────────────── */
+.band{background:linear-gradient(100deg,var(--violet-deep),var(--violet));
+  border-radius:var(--r-lg);padding:26px clamp(20px,3vw,34px);margin:38px 0;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;color:#fff}
+.stat{display:flex;align-items:center;gap:14px}
+.stat svg{display:block;flex-shrink:0;opacity:.9}
+.stat b{display:block;font:800 25px/1 var(--f-d);font-variant-numeric:tabular-nums}
+.stat span{font-size:12.5px;color:#DCD3FF}
+
+/* ── table ───────────────────────────────────────────── */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{background:var(--card);border:1px solid var(--line-2);border-radius:100px;
+  padding:8px 16px;font:500 13px/1 var(--f-b);color:var(--muted)}
+.chip:hover{color:var(--ink);border-color:var(--violet)}
+.chip[aria-pressed="true"]{background:var(--night);color:#fff;border-color:var(--night)}
+.tablecard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  overflow:hidden}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead th{background:var(--card-2);text-align:left;padding:15px 18px;
+  font:500 11px/1 var(--f-m);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--faint);border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr[data-row]{cursor:pointer}
+tbody tr[data-row]:hover{background:var(--card-2)}
+tr.sec td{background:var(--violet-soft);color:var(--violet);
+  font:700 11px/1 var(--f-d);letter-spacing:.12em;text-transform:uppercase;padding:11px 18px}
+.rid{font:500 12px/1 var(--f-m);color:var(--muted);white-space:nowrap}
+.star{color:var(--warn);margin-left:4px}
+.cap{font-weight:700;font-size:14.5px;display:block;margin-bottom:3px}
+.q2{color:var(--muted);font-size:12.5px;display:block;max-width:58ch}
+.when{font:400 12px/1 var(--f-m);color:var(--faint);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+
+/* ── quote ───────────────────────────────────────────── */
+.quote{background:linear-gradient(120deg,var(--night),var(--night-2));
+  border-radius:var(--r-lg);padding:clamp(28px,4vw,46px);margin:40px 0 0;color:#fff;
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:start}
+.quote .mark{font:800 62px/.7 var(--f-d);color:var(--lime)}
+.quote p{font:500 clamp(19px,2.5vw,26px)/1.34 var(--f-d);margin:0 0 14px;
+  letter-spacing:-.015em;text-wrap:balance}
+.quote cite{font-style:normal;font:400 13px/1.5 var(--f-m);color:#A99EDA}
+
+footer{margin-top:34px;color:var(--faint);font:400 12.5px/1.7 var(--f-b);
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+
+/* ── detail dialog ───────────────────────────────────── */
+dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none}
+dialog::backdrop{background:rgba(16,10,32,.62)}
+.sheet{background:var(--card);border-radius:var(--r-lg);width:min(640px,94vw);
+  max-height:88vh;overflow-y:auto;padding:28px clamp(20px,3vw,32px) 34px;color:var(--ink);
+  border:1px solid var(--line-2)}
+.sheet .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.sheet h3{font:700 24px/1.16 var(--f-d);margin:9px 0 6px;letter-spacing:-.02em}
+.sheet .lead{color:var(--muted);font-size:14.5px;margin:0 0 22px}
+.x{background:var(--card-2);border:1px solid var(--line-2);border-radius:100px;
+  padding:8px 15px;font:500 12.5px/1 var(--f-b);color:var(--muted)}
+.x:hover{color:var(--ink);border-color:var(--ink)}
+.blk{font:700 11px/1 var(--f-d);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--violet);margin:24px 0 12px}
+dl{display:grid;grid-template-columns:130px minmax(0,1fr);gap:11px 16px;margin:0}
+dt{font:400 12px/1.45 var(--f-m);color:var(--faint)}
+dd{margin:0;font-size:13.5px;overflow-wrap:anywhere}
+.sheet .note{font-size:13.5px;color:var(--muted);margin:0;line-height:1.62}
+.vpill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:100px;
+  font:500 13px/1 var(--f-b);background:var(--card-2);border:1px solid var(--line-2)}
+.vpill i{width:9px;height:9px;border-radius:50%;background:var(--none)}
+.vpill[data-s="verified"] i{background:var(--ok)}
+.vpill[data-s="settled"] i{background:var(--settled)}
+.vpill[data-s="incomplete"] i{background:var(--warn)}
+.vpill[data-s="unknown"] i{background:var(--unknown)}
+
+@media (max-width:940px){
+  .hero{grid-template-columns:1fr}
+  .rules{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 0}
+  .rule{padding:0 20px}
+  .rule:nth-child(3){padding-left:0;border-left:0}
+  .band{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+}
+@media (max-width:620px){
+  .rules{grid-template-columns:1fr;gap:24px}
+  .rule{padding:0;border-left:0}
+  .band{grid-template-columns:1fr}
+  .wall{gap:1px;height:70px}
+  .tick{min-width:2px}
+  .gap{flex:0 0 5px;min-width:5px}
+  .wallaxis{gap:1px}
+  .wallaxis .gap{flex:0 0 5px}
+  dl{grid-template-columns:1fr;gap:2px}
+  dt{margin-top:10px}
+  .quote{grid-template-columns:1fr;gap:6px}
+}
+</style>
+
+<div class="page">
+
+  <div class="top">
+    <div class="brand">
+      <span class="glyph" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 2l12 12M14 2L2 14" stroke="#D7F24A" stroke-width="2.1" stroke-linecap="round"/>
+        </svg>
+      </span>
+      Identity Market Intel
+    </div>
+    <span class="pill">Read-only preview · updated weekly</span>
+  </div>
+
+  <section class="hero">
+    <div>
+      <p class="kicker">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M13 2L3 14h7l-1 8 11-13h-8l1-7z"/>
+        </svg>
+        RSA vs SailPoint vs Saviynt
+      </p>
+      <h1>Know what<br>you know<em>and what you don't</em></h1>
+      <p class="lede">
+        Thirty-eight capability questions a customer will actually ask. Each one gets
+        a verdict only when there is evidence behind it — and a note saying what
+        would prove it wrong.
+      </p>
+      <button class="cta" id="jump">
+        See the matrix
+        <span class="dot" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h13M12 5l7 7-7 7" stroke="#D7F24A" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <div class="covercard">
+      <h2 id="lead"></h2>
+      <p class="sub" id="leadsub"></p>
+      <div class="wall" id="wall"></div>
+      <div class="wallaxis" id="axis"></div>
+      <div class="legend">
+        <b><i style="background:var(--ok)"></i>Verified</b>
+        <b><i style="background:var(--settled)"></i>Settled</b>
+        <b><i style="background:var(--warn)"></i>Evidence incomplete</b>
+        <b><i style="background:var(--unknown)"></i>Unknown</b>
+        <b><i style="background:var(--none);opacity:.4"></i>No verdict yet</b>
+      </div>
+    </div>
+  </section>
+
+  <section class="slab">
+    <p class="kicker">How a verdict gets written</p>
+    <div class="rules">
+      <div class="rule">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D7F24A"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+        </svg>
+        <h3>Compare like<br>for like</h3>
+        <p>On-premises against IdentityIQ, cloud against ISC and EIC. A difference caused
+           by the delivery model is not a product gap, and gets labelled as such.</p>
+      </div>
+      <div class="rule">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D7F24A"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/>
+        </svg>
+        <h3>A failed search<br>proves nothing</h3>
+        <p>Most RSA technical detail sits behind a login. Not finding something means
+           the research is incomplete, never that the product cannot do it.</p>
+      </div>
+      <div class="rule">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D7F24A"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l7.5 3.4v5c0 4.6-3.1 8.8-7.5 10.1-4.4-1.3-7.5-5.5-7.5-10.1v-5z"/>
+          <path d="M9.2 12.1l2 2 3.6-3.9"/>
+        </svg>
+        <h3>Lab evidence<br>stays internal</h3>
+        <p>Anything verified in a lab rather than in public counts as real evidence, and
+           is never quoted to a customer as though it were published.</p>
+      </div>
+      <div class="rule">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D7F24A"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.4l3.4 2"/>
+        </svg>
+        <h3>Verdicts<br>expire</h3>
+        <p>Ninety days after it was last checked, a verdict is flagged stale. Say so
+           before using it, and re-verify if the answer matters.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="shead">
+    <h2>The ten rows that <em>decide deals</em></h2>
+    <p>Everything else is useful. These are the ones a customer's decision actually
+       turns on, so they get filled first.</p>
+  </div>
+  <div class="cards" id="cards"></div>
+
+  <div class="band" id="band"></div>
+
+  <div class="shead" id="matrix">
+    <h2>The full <em>matrix</em></h2>
+    <p>Select any row to see each vendor's position, the evidence behind the verdict,
+       and what would overturn it.</p>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="chip" data-f="sec" data-v="all" aria-pressed="true">All 38 rows</button>
+    <button class="chip" data-f="sec" data-v="A" aria-pressed="false">Architecture</button>
+    <button class="chip" data-f="sec" data-v="B" aria-pressed="false">Connectivity</button>
+    <button class="chip" data-f="sec" data-v="C" aria-pressed="false">Governance</button>
+    <button class="chip" data-f="sec" data-v="D" aria-pressed="false">2026 battlegrounds</button>
+    <button class="chip" data-f="sec" data-v="E" aria-pressed="false">Ecosystem</button>
+  </div>
+
+  <div class="tablecard"><div class="scroll">
+    <table>
+      <thead><tr>
+        <th>Row</th>
+        <th>What a customer asks</th>
+        <th>Where we stand</th>
+        <th>Checked</th>
+      </tr></thead>
+      <tbody id="body"></tbody>
+    </table>
+  </div></div>
+
+  <div class="quote">
+    <span class="mark" aria-hidden="true">&ldquo;</span>
+    <div>
+      <p>A row without a falsifier is an opinion wearing a verdict's clothes.</p>
+      <cite>The rule the whole matrix is built on. If nothing could prove a claim
+        wrong, it was never a finding.</cite>
+    </div>
+  </div>
+
+  <footer>
+    <span>Static preview. The working console adds sign-in, saved edits and live sync.</span>
+    <span id="stamp"></span>
+  </footer>
+</div>
+
+<dialog id="dlg"><div class="sheet" id="sheet"></div></dialog>
+
+<script>
+const ROWS = /*__DATA__*/;
+
+const SECTIONS = {
+  A:'Architecture & deployment', B:'Connectivity', C:'Governance core',
+  D:'The 2026 battlegrounds', E:'Ecosystem & commercial'
+};
+const PLAIN = {
+  verified:'Verified', settled:'Settled', incomplete:'Evidence incomplete',
+  unknown:'Unknown', stale:'Stale — needs re-checking', empty:'No verdict yet'
+};
+let secFilter = 'all';
+
+const days = d => d ? Math.floor((Date.now() - new Date(d+'T00:00:00Z')) / 864e5) : null;
+
+function stateOf(r){
+  if(!r.verdict) return 'empty';
+  const a = days(r.last_verified);
+  if(a !== null && a > 90) return 'stale';
+  if(r.verdict.endsWith('verified')) return 'verified';
+  if(r.verdict.startsWith('Deployment-model artefact')) return 'settled';
+  if(r.verdict === 'Different implementation approach') return 'settled';
+  if(r.verdict.startsWith('Unknown')) return 'unknown';
+  return 'incomplete';
+}
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(text !== undefined) n.textContent = text;
+  return n;
+}
+function svgIcon(d){
+  const s = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  s.setAttribute('width','24'); s.setAttribute('height','24');
+  s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('fill','none');
+  s.setAttribute('stroke','#D7F24A'); s.setAttribute('stroke-width','1.7');
+  s.setAttribute('stroke-linecap','round'); s.setAttribute('stroke-linejoin','round');
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', d); s.appendChild(p); return s;
+}
+
+/* ── coverage wall ───────────────────────────────── */
+(function(){
+  const wall = document.getElementById('wall');
+  const axis = document.getElementById('axis');
+  let prev = null, groupCount = 0, groupLetter = null;
+  const flush = () => {
+    if(groupLetter){
+      const s = el('span', null, groupLetter);
+      s.style.flex = groupCount + ' 1 0';
+      axis.append(s);
+    }
+  };
+  ROWS.forEach((r,i) => {
+    const L = r.id[0];
+    if(prev && L !== prev){
+      wall.append(el('span','gap'));
+      flush(); axis.append(el('span','gap'));
+      groupCount = 0;
+    }
+    prev = L; groupLetter = L; groupCount++;
+    const k = el('span','tick' + (r.priority === 'star' ? ' tick--star' : ''));
+    k.dataset.s = stateOf(r) === 'stale' ? 'incomplete' : stateOf(r);
+    k.title = r.id + ' — ' + r.capability + ' · ' + PLAIN[stateOf(r)];
+    k.style.animationDelay = (i*11) + 'ms';
+    wall.append(k);
+  });
+  flush();
+
+  const stars  = ROWS.filter(r => r.priority === 'star');
+  const seeded = ROWS.filter(r => r.verdict);
+  const done   = stars.filter(r => r.verdict).length;
+  document.getElementById('lead').textContent =
+    done + ' of ' + stars.length + ' decisive rows answered';
+  document.getElementById('leadsub').textContent =
+    'One bar per question, grouped A to E. Tall bars are the rows that decide deals. '
+    + 'A pale bar means nobody has evidenced it yet — which is the honest state, not a gap to fill with a guess.';
+
+  const band = document.getElementById('band');
+  [['M4 6h16M4 12h16M4 18h10', ROWS.length, 'capability questions'],
+   ['M20 6L9 17l-5-5', seeded.length, 'carry a verdict'],
+   ['M12 3l2.6 5.6 6 .8-4.4 4.3 1.1 6.1L12 17l-5.3 2.8 1.1-6.1L3.4 9.4l6-.8z', stars.length, 'decide deals'],
+   ['M12 7v5.4l3.4 2M20.5 12a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0', 90, 'days before stale']]
+   .forEach(([d,n,label]) => {
+      const s = el('div','stat');
+      const ic = svgIcon(d); ic.setAttribute('stroke','#EFEBFF'); ic.setAttribute('width','26');
+      ic.setAttribute('height','26');
+      const box = el('div');
+      box.append(el('b',null,String(n)), el('span',null,label));
+      s.append(ic, box); band.append(s);
+   });
+
+  document.getElementById('stamp').textContent =
+    'Snapshot taken ' + new Date().toISOString().slice(0,10);
+})();
+
+/* ── star cards ──────────────────────────────────── */
+(function(){
+  const box = document.getElementById('cards');
+  ROWS.filter(r => r.priority === 'star').forEach(r => {
+    const s = stateOf(r);
+    const c = el('button','card');
+    c.append(
+      el('span','rowid', r.id + ' · ' + SECTIONS[r.id[0]].split(' ')[0]),
+      el('h4',null,r.capability),
+      el('p','q',r.question));
+    const st = el('span','state'); st.dataset.s = s === 'stale' ? 'incomplete' : s;
+    st.append(el('i'), document.createTextNode(PLAIN[s]));
+    c.append(st);
+    c.addEventListener('click', () => open(r));
+    box.append(c);
+  });
+})();
+
+/* ── table ───────────────────────────────────────── */
+function draw(){
+  const body = document.getElementById('body');
+  body.textContent = '';
+  const rows = ROWS.filter(r => secFilter === 'all' || r.id[0] === secFilter);
+  let prev = null;
+  for(const r of rows){
+    if(r.id[0] !== prev){
+      prev = r.id[0];
+      const tr = el('tr','sec'); const td = el('td',null, prev + ' — ' + SECTIONS[prev]);
+      td.colSpan = 4; tr.append(td); body.append(tr);
+    }
+    const s = stateOf(r);
+    const tr = el('tr'); tr.dataset.row = r.id; tr.tabIndex = 0;
+    tr.append(el('td','rid', r.id));
+    if(r.priority === 'star') tr.lastChild.append(el('span','star','★'));
+
+    const cap = el('td');
+    cap.append(el('span','cap', r.capability), el('span','q2', r.question));
+    tr.append(cap);
+
+    const v = el('td');
+    const pill = el('span','vpill'); pill.dataset.s = s === 'stale' ? 'incomplete' : s;
+    pill.append(el('i'), document.createTextNode(r.verdict || 'No verdict yet'));
+    v.append(pill); tr.append(v);
+
+    tr.append(el('td','when', r.last_verified || '—'));
+    tr.addEventListener('click', () => open(r));
+    tr.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(r); }
+    });
+    body.append(tr);
+  }
+}
+
+/* ── detail ──────────────────────────────────────── */
+const dlg = document.getElementById('dlg');
+function open(r){
+  const s = stateOf(r);
+  const box = document.getElementById('sheet');
+  box.textContent = '';
+
+  const head = el('div','head');
+  const left = el('div');
+  left.append(el('span','rid', r.id + (r.priority === 'star' ? ' ★' : '') + ' · ' + SECTIONS[r.id[0]]),
+              el('h3', null, r.capability));
+  const x = el('button','x','Close');
+  x.addEventListener('click', () => dlg.close());
+  head.append(left, x);
+  box.append(head, el('p','lead', r.question));
+
+  const pill = el('span','vpill'); pill.dataset.s = s === 'stale' ? 'incomplete' : s;
+  pill.append(el('i'), document.createTextNode(r.verdict || 'No verdict yet — nobody has evidenced this'));
+  box.append(pill);
+
+  box.append(el('div','blk','Where each product stands'));
+  const dl = document.createElement('dl');
+  [['Comparing','pairing'],['SailPoint ISC','sailpoint_isc'],['IdentityIQ','sailpoint_iiq'],
+   ['Saviynt EIC','saviynt_eic'],['RSA G&L','rsa_gl']]
+   .forEach(([k,f]) => dl.append(el('dt',null,k), el('dd',null, r[f] || 'Not established')));
+  box.append(dl);
+
+  box.append(el('div','blk','Evidence'));
+  const dl2 = document.createElement('dl');
+  [['Evidence level', r.evidence_level || 'None recorded'],
+   ['Shareable', r.distribution === 'internal' ? 'Internal only' : 'Customer-facing'],
+   ['Last checked', r.last_verified || 'Never'],
+   ['Source', r.sources || 'None recorded'],
+   ['Would disprove it', r.falsifier || 'Not yet stated']]
+   .forEach(([k,v]) => dl2.append(el('dt',null,k), el('dd',null,v)));
+  box.append(dl2);
+
+  if(r.notes){
+    box.append(el('div','blk','Analyst note'), el('p','note', r.notes));
+  }
+  dlg.showModal();
+}
+
+document.querySelectorAll('#filters .chip').forEach(c => {
+  c.addEventListener('click', () => {
+    secFilter = c.dataset.v;
+    document.querySelectorAll('#filters .chip').forEach(o =>
+      o.setAttribute('aria-pressed', String(o === c)));
+    draw();
+  });
+});
+document.getElementById('jump').addEventListener('click', () =>
+  document.getElementById('matrix').scrollIntoView({behavior:'smooth', block:'start'}));
+
+draw();
+</script>

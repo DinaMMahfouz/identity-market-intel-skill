@@ -4,3 +4,4 @@ node_modules/
 .env
 .env.*
 preview.html
+console/artifact/dist.html
