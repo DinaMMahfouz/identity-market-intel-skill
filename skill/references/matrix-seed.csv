@@ -1,0 +1,39 @@
+id,priority,capability,question,pairing,sailpoint_isc,sailpoint_iiq,saviynt_eic,rsa_gl,verdict,evidence_level,distribution,last_verified,sources,falsifier,notes
+A1,star,Deployment models offered,Can I run this without sending identity data to a vendor cloud?,all three,SaaS only,On-premises,SaaS only,On-premises and RSA Governance & Lifecycle Cloud,Different implementation approach,B,external,2026-09-03,https://www.rsa.com/products/governance-lifecycle/,"Evidence that G&L Cloud and on-prem differ materially in feature set at the current release would move this row to a deployment-model artefact, or to a competitor advantage on the cloud pairing.",RSA positions one product with two deployment targets; SailPoint ships two products with a migration path between them; Saviynt ships one SaaS product. Verify G&L Cloud / on-prem feature parity before quoting - 'same features' is a vendor claim on all sides.
+A2,,Scale ceiling / clustering,"Will it hold at N million identities, active-active?",on-prem <-> IIQ,,,,,,,,,,,
+A3,,Upgrade & maintenance burden,"Who does the upgrade, how often, and what is the regression cost?",model-split,,,,,,,,,,,
+A4,,Release velocity,How fast do I get new capability?,artefact-prone,,,,,,,,,,,"SaaS ships continuously, on-prem ships in releases. Comparing raw release counts is the classic false verdict. Mark as a deployment-model artefact unless comparing G&L Cloud to ISC or EIC."
+A5,,Data residency options,Where does my identity data physically sit?,cloud <-> cloud,,,,,,,,,,,
+A6,,Air-gapped / sovereign deployment,Can this run disconnected for a regulated or defence customer?,on-prem only,,,,,,,,,,,
+B1,star,Out-of-box connector breadth,Is my app on the list?,all three,,,,,,,,,,,
+B2,star,Custom connector effort,What does it cost me to onboard the app that is not on the list?,all three,,,,,,,,,,,"The row that wins or loses more deals than any other. Public practitioner reviews of RSA G&L repeatedly raise custom-connector effort and consultancy cost - third-party observation, not verified fact, and much of that corpus is 2023 or earlier. Settle it with the timed test in battlegrounds.md section 2."
+B3,,Aggregation model & performance,How long is a full aggregation on my largest source?,all three,,,,,,,,,,,
+B4,,Provisioning / fulfilment architecture,How does fulfilment actually reach the target system?,RSA AFX <-> SailPoint provisioning <-> Saviynt,,,,,,,,,,,
+B5,star,Connector deprecation exposure,"What is being removed, and when?",all three,,,,,,,,,,,Trackable and dated - see the SailPoint deprecation clock in sources.md. Every deprecation announcement is a dated displacement event with a known expiry. Log expiries and surface again at T-90 days.
+B6,,Agent / VA / on-prem component footprint,"How many boxes do I run, and who patches them?",model-split,,,,,,,,,,,
+B7,,Reconciliation & correlation behaviour,What happens when the same human exists three times across sources?,all three,,,,,,,,,,,
+C1,,Access request & approval workflow,Can a business user request access without a ticket?,all three,,,,,,,,,,,
+C2,star,Certification / access review campaigns,How do I run a quarterly recertification across my whole estate?,all three,,,,,,,,,,,"RSA's historical strength area - verify, do not assume."
+C3,,Reviewer experience & campaign completion rate,"Will my reviewers actually finish the campaign, or rubber-stamp it?",all three,,,,,,,,,,,RSA markets gamification here - vendor claim until evidenced.
+C4,,Role modelling (RBAC),Can I model roles the way my business is shaped?,all three,,,,,,,,,,,
+C5,,Role mining,Can it find roles in the entitlements I already have?,all three,,,,,,,,,,,
+C6,,SoD policy & violation handling,How are segregation-of-duties conflicts detected and remediated?,all three,,,,,,,,,,,
+C7,,Entitlement data model depth,Can it represent the entitlement structure of my ERP without flattening it?,all three,,,,,,,,,,,"RSA's Aveksa-lineage modelling - a plausible structural strength, needs evidence."
+C8,,Policy engine,"What can I express as policy, and what needs custom code?",all three,,,,,,,,,,,
+C9,,"Reporting, dashboards, audit trail","What do I hand the auditor, and how long does it take to produce?",all three,,,,,,,,,,,
+D1,star,Machine / non-human identity governance,"How do you discover service accounts I do not know about, and who owns them?",all three,,,,,,,,,,,"Discovery, ownership attribution and lifecycle are three separate capabilities - vendors blur them. SailPoint has shipped AI-driven machine account discovery. Verify RSA's current position from RSA sources before conceding, and verify shipped-not-roadmap before claiming."
+D2,star,AI-assisted access decisions / recommendations,"Does the AI actually decide anything, or does it suggest?",all three,,,,,,,,,,,All three market this. Separate shipped feature from slideware.
+D3,,Identity security posture management (ISPM),What tells me my identity estate is drifting?,all three,,,,,,,,,,,RSA markets ISPM within G&L - verify scope.
+D4,,Cloud infrastructure entitlements (CIEM),"Who can do what in my AWS, Azure and GCP accounts?",all three,,,,,,,,,,,
+D5,,Non-employee / third-party identity,"How do I govern contractors, vendors and partners?",all three,,,,,,,,,,,
+D6,,Data access governance,"Who can read the data, not just open the app?",all three,,,,,,,,,,,
+D7,,Agentic-AI identity,How do I govern an autonomous agent's access?,all three,,,,,,,,,,,Newest front; mostly roadmap everywhere - say so.
+D8,star,MFA + IGA convergence in one vendor,Can one vendor give me authentication and governance on one support path?,all three,No owned authenticator estate - partners for MFA,No owned authenticator estate - partners for MFA,No owned authenticator estate - partners for MFA,Same vendor as SecurID and ID Plus authentication,Potential RSA advantage — evidence incomplete,B,external,2026-09-03,https://www.rsa.com/products/governance-lifecycle/,"Becomes 'RSA advantage — verified' only on evidence of concrete integration value: shared identity context, joint policy, single support path. Evidence that SailPoint or Saviynt has acquired or shipped a first-party authenticator would remove the row entirely.",
+E1,,Public API surface & quality,Can I automate this without the vendor's professional services?,all three,,,,,,,,,,,
+E2,,Event/webhook model,Can downstream systems react to identity events?,all three,,,,,,,,,,,
+E3,,SDK / CLI / Terraform / IaC support,"Can I manage this as code, in my existing pipeline?",all three,,,,,,,,,,,"Likely a competitor-advantage row. SailPoint runs a public GitHub org with SDKs, a Terraform provider and a CLI; Saviynt runs a public developer portal repo. Absence of a public RSA equivalent is evidence about ecosystem, not evidence about product capability. Keep the two claims separate."
+E4,,Developer community size and activity,"If I hire, can I find people who already know this product?",all three,,,,,,,,,,,See E3 - same separation applies.
+E5,star,Implementation partner availability (globally and in-region),"Who actually implements this for me, and do they have capacity?",all three,,,,,,,,,,,"In Saudi this is often the binding constraint, not product capability."
+E6,,Licensing & packaging transparency,What will this cost me in year three?,all three,,,,,,,,,,,
+E7,,Analyst positioning,Will this survive my shortlisting filter?,all three,,,,,,,,,,,Positioning can matter more than capability at the shortlist stage - see battlegrounds.md section 8.
+E8,star,Migration path into the product from a competitor,What does it cost me to move off what I already run?,all three,,,,,,,,,,,The commercial reason this matrix exists - see battlegrounds.md section 1.

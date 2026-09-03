@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identity Market Intel Console</title>
+<meta name="description" content="Capability matrix, findings log and source registry for RSA Governance &amp; Lifecycle vs SailPoint vs Saviynt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/console.css">
+</head>
+<body>
+
+<!-- ───────────────── gate ───────────────── -->
+<div id="gate" class="gate" hidden>
+  <div class="gate__panel">
+    <p class="eyebrow">Identity &amp; Saudi market intelligence</p>
+    <h1 class="gate__title">The matrix is<br>the product.</h1>
+    <p class="gate__blurb">
+      Reports are disposable. This console holds the durable asset: a capability
+      matrix of RSA Governance &amp; Lifecycle against SailPoint and Saviynt,
+      with the evidence behind every verdict and a falsifier for each one.
+    </p>
+
+    <form id="signin-form" class="gate__form" novalidate>
+      <label class="field">
+        <span class="field__label">Work email</span>
+        <input type="email" id="signin-email" name="email" required
+               autocomplete="email" placeholder="you@example.com" spellcheck="false">
+      </label>
+      <button type="submit" class="btn btn--primary" id="signin-btn">Send sign-in link</button>
+    </form>
+    <p class="gate__note" id="gate-note">
+      We email you a one-time link. No password to type, and none stored here.
+    </p>
+  </div>
+
+  <aside class="gate__aside" aria-hidden="true">
+    <div class="tickwall" id="gate-tickwall"></div>
+    <p class="tickwall__caption">38 capability rows. Filled means evidenced.</p>
+  </aside>
+</div>
+
+<!-- ───────────────── console ───────────────── -->
+<div id="console" class="shell" hidden>
+
+  <nav class="rail" aria-label="Sections">
+    <div class="rail__mark" aria-hidden="true">IMI</div>
+    <ul class="rail__list">
+      <li><button class="rail__btn is-active" data-view="matrix"   type="button"><span class="rail__key">M</span>Matrix</button></li>
+      <li><button class="rail__btn"           data-view="findings" type="button"><span class="rail__key">F</span>Findings</button></li>
+      <li><button class="rail__btn"           data-view="sources"  type="button"><span class="rail__key">S</span>Sources</button></li>
+      <li><button class="rail__btn"           data-view="method"   type="button"><span class="rail__key">R</span>Method</button></li>
+    </ul>
+    <div class="rail__foot">
+      <button class="rail__icon" id="theme-btn" type="button" title="Switch theme" aria-label="Switch theme">◑</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar__id">
+        <h1 class="topbar__title" id="view-title">Capability matrix</h1>
+        <p class="topbar__sub" id="view-sub">RSA G&amp;L · SailPoint ISC / IdentityIQ · Saviynt EIC</p>
+      </div>
+      <div class="topbar__right">
+        <span class="conn" id="conn" data-state="connecting" title="Realtime channel">
+          <span class="conn__dot" aria-hidden="true"></span><span class="conn__label">connecting</span>
+        </span>
+        <span class="who" id="who"></span>
+        <button class="btn btn--ghost" id="signout-btn" type="button">Sign out</button>
+      </div>
+    </header>
+
+    <main class="stage" id="stage" tabindex="-1"></main>
+  </div>
+
+  <!-- row inspector -->
+  <aside class="drawer" id="drawer" hidden aria-label="Row detail">
+    <div class="drawer__inner" id="drawer-inner"></div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+</div>
+
+<div class="toaster" id="toaster" role="status" aria-live="polite"></div>
+
+<noscript>
+  <p style="padding:2rem;font:16px system-ui">This console needs JavaScript enabled.</p>
+</noscript>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
