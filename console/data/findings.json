@@ -1,0 +1,33 @@
+[
+ {
+  "finding_id": "sp-cli-2026-09-11-oauth-flow-update",
+  "mode": "scan",
+  "vendor": "SailPoint",
+  "product": "SailPoint CLI",
+  "version": "2.5.0",
+  "classification": "Auth change",
+  "status": "GA",
+  "publication_date": "2026-09-11",
+  "effective_date": "2026-09-11",
+  "expiry_date": null,
+  "discovery_date": "2026-09-13",
+  "first_seen": "2026-09-13",
+  "evidence_level": "A",
+  "evidence_type": "verified-fact",
+  "distribution": "external",
+  "verified_by": "",
+  "verified_date": null,
+  "version_tested": "",
+  "method": "",
+  "canonical_source_url": "https://github.com/sailpoint-oss/sailpoint-cli/releases.atom",
+  "corroborating_urls": ["https://github.com/sailpoint-oss/sailpoint-cli/releases"],
+  "technical_change": "SailPoint CLI 2.5.0 (PR #252, branch feature/DEVREL-3362) ships an updated OAuth authentication flow for the CLI. The official release notes do not elaborate on the specific mechanism changed (grant type, token storage, redirect handling, etc.) - the commit history only labels it 'new oauth flow'.",
+  "who_is_affected": "Teams that script SailPoint ISC/IdentityIQ automation through the CLI and authenticate it via OAuth.",
+  "implementation_impact": "Unconfirmed pending release-note detail. Recommend testing the 2.5.0 upgrade against existing CLI-driven pipelines in a non-production tenant before adopting, since OAuth flow changes can silently break scripted auth. Prior CLI releases in the same window (2.4.0 Aug 26, 2.3.0 Aug 20 migrating to golang-sdk v3) show active, fast-moving CLI development this cycle.",
+  "matrix_rows_touched": [],
+  "rsa_verdict": "",
+  "action": "monitor",
+  "previously_reported": false,
+  "material_change_since_last": "New finding - no prior scan on record for this console."
+ }
+]
