@@ -1,0 +1,35 @@
+[
+ {
+  "finding_id": "sp-sdk-2026-11-08-generic-api-endpoints",
+  "mode": "scan",
+  "vendor": "SailPoint",
+  "product": "TypeScript SDK / Python SDK (sailpoint-oss)",
+  "version": "typescript-sdk v2.2.49; python-sdk v2.1.77",
+  "classification": "SDK/CLI/Terraform change",
+  "status": "GA",
+  "publication_date": "2026-11-03",
+  "effective_date": "2026-11-03",
+  "expiry_date": "",
+  "discovery_date": "2026-11-08",
+  "first_seen": "2026-11-08",
+  "evidence_level": "A",
+  "evidence_type": "verified-fact",
+  "distribution": "external",
+
+  "verified_by": "",
+  "verified_date": "",
+  "version_tested": "",
+  "method": "",
+
+  "canonical_source_url": "https://github.com/sailpoint-oss/typescript-sdk/releases/tag/v2.2.49",
+  "corroborating_urls": ["https://github.com/sailpoint-oss/python-sdk/releases/tag/v2.1.77"],
+  "technical_change": "Both the official TypeScript and Python SDKs added a script to generate an OAuth scopes file and added generic API endpoint support, as mirrored PRs in the same week. Remaining releases in the window (TS v2.2.48/50/51, Python v2.1.76/78/79) carried no described changes beyond a changelog diff link.",
+  "who_is_affected": "Developers automating SailPoint ISC through the official SDKs",
+  "implementation_impact": "Minor developer-experience / tooling change, not a new product capability. Continues to evidence an actively maintained public SDK ecosystem, which was already noted qualitatively in matrix row E3.",
+  "matrix_rows_touched": ["E3"],
+  "rsa_verdict": "",
+  "action": "monitor",
+  "previously_reported": false,
+  "material_change_since_last": "First observation logged for this item; too low-materiality on its own to move the E3 verdict out of unseeded."
+ }
+]
