@@ -1,0 +1,33 @@
+[
+ {
+  "finding_id": "sp-cli-2026-11-09-scope-command",
+  "mode": "scan",
+  "vendor": "SailPoint",
+  "product": "SailPoint CLI",
+  "version": "2.8.0",
+  "classification": "SDK/CLI/Terraform change",
+  "status": "GA",
+  "publication_date": "2026-11-09",
+  "effective_date": "2026-11-09",
+  "expiry_date": "",
+  "discovery_date": "2026-11-15",
+  "first_seen": "2026-11-15",
+  "evidence_level": "A",
+  "evidence_type": "verified-fact",
+  "distribution": "external",
+  "verified_by": "",
+  "verified_date": "",
+  "version_tested": "",
+  "method": "",
+  "canonical_source_url": "https://github.com/sailpoint-oss/sailpoint-cli/releases/tag/2.8.0",
+  "corroborating_urls": [],
+  "technical_change": "SailPoint CLI 2.8.0 adds a new `scope` command, makes OAuth scopes optional (PowerShell scopes are now read from a file instead of being hardcoded), updates connector subcommands to use the latest available API, and adds agent-skills setup for managed and unmanaged UI plugins. CLI terminology shifts from \"ISC\" toward \"Identity Security\" / \"SHF\" when describing a tenant.",
+  "who_is_affected": "Customers and partners automating SailPoint Identity Security Cloud via the public CLI/SDKs.",
+  "implementation_impact": "Low — additive CLI tooling change; the release page states no breaking change or deprecation.",
+  "matrix_rows_touched": ["E3"],
+  "rsa_verdict": "Potential competitor advantage — evidence incomplete",
+  "action": "monitor",
+  "previously_reported": false,
+  "material_change_since_last": ""
+ }
+]
